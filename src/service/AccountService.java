@@ -8,14 +8,15 @@ import vo.UserVO;
 
 public class AccountService {
 	
+	public static UserVO user;
 	private AccountDAO accountDAO;
-	
 	public AccountService() {
 		accountDAO = new AccountDAO();
 	}
 	
 	public UserVO login(String id, String pw) {
-		return accountDAO.login(id,pw);
+		user = accountDAO.login(id,pw); 
+		return user;
 	}
 	
 	public void join(String id, String pw, String name) {

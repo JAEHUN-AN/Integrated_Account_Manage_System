@@ -1,6 +1,5 @@
 package ui;
 
-
 public class TotalAccountUI extends BaseUI{
 	public void showMenu() {
 		System.out.println("통합계좌 관리 서비스입니다.");
@@ -36,7 +35,6 @@ public class TotalAccountUI extends BaseUI{
 				myui.execute();
 				break;
 			case 0:
-				
 				break;
 			default:
 				System.out.println("번호를 잘못 입력하셨습니다.");

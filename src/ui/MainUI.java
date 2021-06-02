@@ -2,50 +2,13 @@ package ui;
 
 public class MainUI extends BaseUI {
 
-	public void showFirstMenu() {
-		System.out.println("==============================");
-		System.out.println("\t1. 로그인");
-		System.out.println("\t2. 회원가입");
-		System.out.println("==============================");
-	}
-	
-	public void showSecondMenu() {
-		System.out.println();
-		System.out.println("==============================");
-		System.out.println("1. 계좌 전체 조회"); // AccountInfoAllUI
-		System.out.println("2. 계좌번호로 조회"); // AccountInfoNoUI
-		System.out.println("3. 은행별 계좌 조회"); // AccountInfoBankUI
-		System.out.println("4. 통합계좌 관리"); // AccountAddUI
-		System.out.println("5. 입금"); // AccountUpdateUI
-		System.out.println("6. 출금"); // AccountDeleteUI
-		System.out.println("7. 이체"); // DepositUI
-		System.out.println("8. 계좌 신규 생성"); // WithrawUI
-		System.out.println("0. 종료"); // ExitUI
-		System.out.println("==============================");
-		System.out.println();
-		System.out.print("원하시는 서비스 번호를 입력하세요 : ");
-	}
-	
-	public void showLoginUI(MyAccountUI myui, int logJoin) throws Exception {
-		logJoin = scanInt("원하시는 서비스 번호를 입력하세요 : ");
-		if(logJoin == 1) {
-			myui = new LoginUI();
-			myui.execute();
-			BaseUI.user = ((LoginUI) myui).user();
-		} else if(logJoin == 2) {
-			myui = new JoinUI();
-			myui.execute();
-		} else
-			System.out.println("잘못 입력하셨습니다.");
-	}
-	
 	@Override
 	public void execute() throws Exception {
 		MyAccountUI myui = null;
 		
-		showFirstMenu();		
 		int logJoin = 0;
 		while(BaseUI.user == null) { //로그인 한 user가 생길 때 까지 반복
+			showFirstMenu();		
 			showLoginUI(myui, logJoin);
 		}
 		
@@ -98,4 +61,41 @@ public class MainUI extends BaseUI {
 			}
 		}
 	}
+	public void showFirstMenu() {
+		System.out.println("==============================");
+		System.out.println("\t1. 로그인");
+		System.out.println("\t2. 회원가입");
+		System.out.println("==============================");
+	}
+	
+	public void showSecondMenu() {
+		System.out.println();
+		System.out.println("==============================");
+		System.out.println("1. 계좌 전체 조회"); // AccountInfoAllUI
+		System.out.println("2. 계좌번호로 조회"); // AccountInfoNoUI
+		System.out.println("3. 은행별 계좌 조회"); // AccountInfoBankUI
+		System.out.println("4. 통합계좌 관리"); // AccountAddUI
+		System.out.println("5. 입금"); // AccountUpdateUI
+		System.out.println("6. 출금"); // AccountDeleteUI
+		System.out.println("7. 이체"); // DepositUI
+		System.out.println("8. 계좌 신규 생성"); // WithrawUI
+		System.out.println("0. 종료"); // ExitUI
+		System.out.println("==============================");
+		System.out.println();
+		System.out.print("원하시는 서비스 번호를 입력하세요 : ");
+	}
+	
+	public void showLoginUI(MyAccountUI myui, int logJoin) throws Exception {
+		logJoin = scanInt("원하시는 서비스 번호를 입력하세요 : ");
+		if(logJoin == 1) {
+			myui = new LoginUI();
+			myui.execute();
+			BaseUI.user = ((LoginUI) myui).user();
+		} else if(logJoin == 2) {
+			myui = new JoinUI();
+			myui.execute();
+		} else
+			System.out.println("잘못 입력하셨습니다.");
+	}
+	
 }

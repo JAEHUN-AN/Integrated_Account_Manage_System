@@ -8,12 +8,12 @@ public class AccountAddUI extends BaseUI{
 	public void execute() throws Exception {
 		
 		System.out.println("계좌 등록 서비스입니다.");
-		System.out.println(" [ 하나, 신한, 우리, 국민 , 기업 ] 은행만 등록 가능합니다.");
+		System.out.println(" [ 신한, 우리, 국민 , 기업 ] 은행만 등록 가능합니다.");
 		String bank = scanStr("은행을 입력해주세요 : ");
 		
-		while(!bank.equals("하나") && !bank.equals("신한") && !bank.equals("우리") 
+		while(!bank.equals("신한") && !bank.equals("우리") 
 				&& !bank.equals("국민") && !bank.equals("기업")) {
-			System.out.println(" [ 하나, 신한, 우리, 국민 , 기업 ] 은행만 등록 가능합니다.");
+			System.out.println(" [ 신한, 우리, 국민 , 기업 ] 은행만 등록 가능합니다.");
 			System.out.println("다시 입력해주세요.");
 			bank = scanStr("은행을 입력해주세요 : ");
 		}

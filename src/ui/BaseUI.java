@@ -14,7 +14,6 @@ public abstract class BaseUI implements MyAccountUI {
 	public BaseUI() {
 		sc = new Scanner(System.in);
 		service = AccountServiceFactory.getAccountInstance();
-		
 	}
 	
 	protected String scanStr(String msg) {

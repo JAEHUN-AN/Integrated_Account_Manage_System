@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import service.AccountService;
+import ui.BaseUI;
 import util.ConnectionFactory;
 import util.JDBCClose;
 import vo.AccountVO;
@@ -18,7 +20,7 @@ public class AccountDAO {
 	private Connection conn;
 	private PreparedStatement pstmt;
 	private ResultSet rs;
-	private UserVO userVO = new UserVO();
+	private UserVO userVO = new UserVO();//new UserVO();
 	private StringBuilder sql;
 	private List<AccountVO> list;
 
@@ -40,21 +42,26 @@ public class AccountDAO {
 				System.out.println("다시 입력해주세요.");
 				
 			} else {
-				String password = rs.getString("pw");
-	
-				if (!(password.equals(pw))) {
-					System.out.println(">>>비밀번호가 틀렸습니다.");
-					System.exit(0);
-				} else {
-					String name = rs.getString(3);
+				String userId = rs.getString(1);
+				String password = rs.getString(2);
+				String name = rs.getString(3);
+				System.out.println("==============================");
+				System.out.println("[" + name + "]님! 반갑습니다.");
+				System.out.println("==============================");
+				userVO.setId(userId);
+				userVO.setPw(password);
+				userVO.setName(name);
+				//계좌 여부 체크
+				List<AccountVO> list = accountInfoAll(); 
+				if(list.isEmpty()) {
+					System.out.println();
 					System.out.println("==============================");
-					System.out.println("[" + name + "]님! 반갑습니다.");
+					System.out.println("\t[" + name + "]님! 계좌가 없습니다.");
+					System.out.println("\t계좌를 생성해주시기 바랍니다.");
 					System.out.println("==============================");
-					userVO.setId(id);
-					userVO.setPw(pw);
-					userVO.setName(name);
-					return userVO;
+					System.out.println();
 				}
+				return userVO;
 			}
 			
 		} catch (Exception e) {
@@ -63,7 +70,6 @@ public class AccountDAO {
 			JDBCClose.close(conn, pstmt);
 			JDBCClose.close(rs);
 		}
-		userVO = null;
 		return userVO;
 	}
 
@@ -204,6 +210,25 @@ public class AccountDAO {
 		
 		try {
 			conn.setAutoCommit(false);
+			
+			//은행 별 계좌 테이블에 등록
+			//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+			sql = new StringBuilder();
+			sql.append("INSERT INTO ACCOUNT_?(ACCOUNT_NO, BANK, ACCOUNT_HOLDER, BALANCE, nickName, user_ID) ");
+			sql.append(" VALUES(?, ?, ?, ?, ?, ?)");
+
+			pstmt = conn.prepareStatement(sql.toString());
+			pstmt.setString(1, account.getBank());
+			pstmt.setString(2, account.getAccountNo());
+			pstmt.setString(3, account.getBank());
+			pstmt.setString(4, account.getAccountHolder());
+			pstmt.setInt(5, account.getBalance());
+			pstmt.setString(6, account.getNickName());
+			pstmt.setString(7, userId);
+			pstmt.executeUpdate();
+		
+			//계좌시스템에 계좌 등록
+			//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 			sql = new StringBuilder();
 			sql.append("INSERT INTO ACCOUNT_SYSTEM(ACCOUNT_NO, BANK, ACCOUNT_HOLDER, BALANCE, nickName, user_ID) ");
 			sql.append(" VALUES(?, ?, ?, ?, ?, ?)");
@@ -216,6 +241,8 @@ public class AccountDAO {
 			pstmt.setString(5, account.getNickName());
 			pstmt.setString(6, userId);
 			pstmt.executeUpdate();
+			
+			
 			conn.commit();
 			System.out.println("계좌등록이 완료됐습니다.");
 
@@ -236,15 +263,20 @@ public class AccountDAO {
 		
 		try {
 			conn.setAutoCommit(false);
+			
+			
 			sql = new StringBuilder();
-			sql.append("UPDATE ACCOUNT_SYSTEM SET nickName = ? WHERE ACCOUNT_NO = ? AND user_ID = ? ");
+			sql.append("UPDATE ACCOUNT_? SET nickName = ? WHERE ACCOUNT_NO = ? AND user_ID = ? ");
 
 			pstmt = conn.prepareStatement(sql.toString());
 			
 			pstmt.setString(1, nickName);
-			pstmt.setString(2, accountNo);
-			pstmt.setString(3, userVO.getId());
+			pstmt.setString(2, nickName);
+			pstmt.setString(3, accountNo);
+			pstmt.setString(4, userVO.getId());
 			pstmt.executeUpdate();
+			
+			
 			conn.commit();
 			System.out.println("해당 계좌의 별칭을 수정했습니다.");
 
@@ -268,11 +300,10 @@ public class AccountDAO {
 		try {
 			conn.setAutoCommit(false);
 			sql = new StringBuilder();
-			sql.append("DELETE FROM ACCOUNT_SYSTEM WHERE ACCOUNT_NO = ? AND user_ID = ? ");
+			sql.append("DELETE FROM ACCOUNT_SYSTEM WHERE ACCOUNT_NO = ? ");
 
 			pstmt = conn.prepareStatement(sql.toString());
 			pstmt.setString(1, accountNO);
-			pstmt.setString(2, userVO.getId());
 			pstmt.executeUpdate();
 			conn.commit();
 			System.out.println("해당 계좌를 삭제했습니다.");
@@ -430,18 +461,32 @@ public class AccountDAO {
 		conn = new ConnectionFactory().getConnection();
 		
 		try {
-			conn.setAutoCommit(false);
 			sql = new StringBuilder();
-			sql.append("INSERT INTO ACCOUNT_SYSTEM(ACCOUNT_NO, BANK, ACCOUNT_HOLDER, BALANCE, nickName, user_ID) VALUES(?, ?, ?, ?, ?, ?)");
+			sql.append("SELECT * FROM ACCOUNT_SYSTEM WHERE user_ID = ? ");
+			sql.append(" and sysdate > add_months(create_date, 1) ORDER BY Create_date DESC ");
 			pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setString(1, accountNo);
-			pstmt.setString(2, bank);
-			pstmt.setString(3, accountHolder);
-			pstmt.setInt(4, firstMoney);
-			pstmt.setString(5, nickName);
-			pstmt.setString(6, userVO.getId());
-			pstmt.executeUpdate();
-			conn.commit();
+			pstmt.setString(1, userVO.getId());
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) { // 결과가 없으면 새 계좌 생성
+				conn.setAutoCommit(false);
+				sql = new StringBuilder();
+				sql.append("INSERT INTO ACCOUNT_SYSTEM(ACCOUNT_NO, BANK, ACCOUNT_HOLDER, BALANCE, nickName, user_ID) VALUES(?, ?, ?, ?, ?, ?) ");
+				pstmt = conn.prepareStatement(sql.toString());
+				pstmt.setString(1, accountNo);
+				pstmt.setString(2, bank);
+				pstmt.setString(3, accountHolder);
+				pstmt.setInt(4, firstMoney);
+				pstmt.setString(5, nickName);
+				pstmt.setString(6, userVO.getId());
+				pstmt.executeUpdate();
+				conn.commit();
+					
+			}else {// 결과가 있으면 한 달 제한 안내
+				System.out.println();
+				System.out.println("한 달 뒤에 생성 가능합니다.");
+				System.out.println();
+			}
 			System.out.println("새로운 계좌를 생성했습니다.");
 
 		} catch (Exception e) {

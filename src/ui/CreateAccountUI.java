@@ -9,8 +9,8 @@ public class CreateAccountUI extends BaseUI {
 		Random r = new Random();
 		
 		System.out.println("계좌 생성 서비스입니다.");
-		System.out.println("[ 하나, 신한, 우리, 국민 , 기업 ] 은행만 등록 가능합니다.");
-		String bank = scanStr("은행을 입력해주세요 : ");
+		System.out.println("[ 하나 ] 은행만 등록 가능합니다.");
+		String bank = "하나";
 		String accountHolder = scanStr("계좌주명을 입력하세요 : ");
 		String nickName = scanStr("계좌의 별칭을 입력하세요 : ");
 		int firstMoney = scanInt("처음 입금하실 금액을 입력해주세요(1000원 이상) : ");
@@ -24,7 +24,7 @@ public class CreateAccountUI extends BaseUI {
 			if(i % 4 == 0) {
 				sql.append("-");
 			} else {
-				int num = r.nextInt(8) + 1;
+				int num = r.nextInt(10);
 				sql.append(num);
 			}
 		}
