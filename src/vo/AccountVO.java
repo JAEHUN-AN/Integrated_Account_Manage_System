@@ -98,4 +98,11 @@ public class AccountVO {
 		this.nickName = nickName;
 	}
 
+	@Override
+	public String toString() {
+		return "AccountVO [id=" + id + ", pw=" + pw + ", bank=" + bank + ", accountNo=" + accountNo + ", accountHolder="
+				+ accountHolder + ", balance=" + balance + ", nickName=" + nickName + "]";
+	}
+
+	
 }

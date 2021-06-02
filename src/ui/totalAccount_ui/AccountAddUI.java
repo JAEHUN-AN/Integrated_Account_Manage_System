@@ -1,5 +1,6 @@
-package ui;
+package ui.totalAccount_ui;
 
+import ui.BaseUI;
 import vo.AccountVO;
 
 public class AccountAddUI extends BaseUI{

@@ -1,7 +1,12 @@
 package ui;
 
-public class TotalAccountUI extends BaseUI{
+import ui.totalAccount_ui.AccountAddUI;
+import ui.totalAccount_ui.AccountDeleteUI;
+import ui.totalAccount_ui.AccountUpdateUI;
+
+public class AdminUI extends BaseUI {
 	public void showMenu() {
+		System.out.println();
 		System.out.println("통합계좌 관리 서비스입니다.");
 		System.out.println();
 		System.out.println("==============================");

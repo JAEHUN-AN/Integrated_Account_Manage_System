@@ -1,6 +1,8 @@
-package ui;
+package ui.service_ui;
 
 import java.util.Random;
+
+import ui.BaseUI;
 
 public class CreateAccountUI extends BaseUI {
 

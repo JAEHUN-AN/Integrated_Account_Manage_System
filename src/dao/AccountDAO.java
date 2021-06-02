@@ -40,7 +40,6 @@ public class AccountDAO {
 			if(!rs.next()) {
 				System.out.println(">>>해당 ID 정보가 없습니다.");
 				System.out.println("다시 입력해주세요.");
-				
 			} else {
 				String userId = rs.getString(1);
 				String password = rs.getString(2);
@@ -70,6 +69,7 @@ public class AccountDAO {
 			JDBCClose.close(conn, pstmt);
 			JDBCClose.close(rs);
 		}
+		
 		return userVO;
 	}
 
@@ -210,27 +210,26 @@ public class AccountDAO {
 		
 		try {
 			conn.setAutoCommit(false);
-			
+			String tableName = account.getBank();
 			//은행 별 계좌 테이블에 등록
 			//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 			sql = new StringBuilder();
-			sql.append("INSERT INTO ACCOUNT_?(ACCOUNT_NO, BANK, ACCOUNT_HOLDER, BALANCE, nickName, user_ID) ");
-			sql.append(" VALUES(?, ?, ?, ?, ?, ?)");
+			sql.append("INSERT INTO ACCOUNT_" + tableName 
+			+ "(ACCOUNT_NO, BANK, ACCOUNT_HOLDER, BALANCE, nickName, user_ID) VALUES(?, ?, ?, ?, ?, ?) ");
 
 			pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setString(1, account.getBank());
-			pstmt.setString(2, account.getAccountNo());
-			pstmt.setString(3, account.getBank());
-			pstmt.setString(4, account.getAccountHolder());
-			pstmt.setInt(5, account.getBalance());
-			pstmt.setString(6, account.getNickName());
-			pstmt.setString(7, userId);
+			pstmt.setString(1, account.getAccountNo());
+			pstmt.setString(2, account.getBank());
+			pstmt.setString(3, account.getAccountHolder());
+			pstmt.setInt(4, account.getBalance());
+			pstmt.setString(5, account.getNickName());
+			pstmt.setString(6, userId);
 			pstmt.executeUpdate();
-		
+
 			//계좌시스템에 계좌 등록
 			//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 			sql = new StringBuilder();
-			sql.append("INSERT INTO ACCOUNT_SYSTEM(ACCOUNT_NO, BANK, ACCOUNT_HOLDER, BALANCE, nickName, user_ID) ");
+			sql.append("INSERT INTO ACCOUNT_SYSTEM (ACCOUNT_NO, BANK, ACCOUNT_HOLDER, BALANCE, nickName, user_ID) ");
 			sql.append(" VALUES(?, ?, ?, ?, ?, ?)");
 
 			pstmt = conn.prepareStatement(sql.toString());
@@ -241,7 +240,6 @@ public class AccountDAO {
 			pstmt.setString(5, account.getNickName());
 			pstmt.setString(6, userId);
 			pstmt.executeUpdate();
-			
 			
 			conn.commit();
 			System.out.println("계좌등록이 완료됐습니다.");
@@ -255,6 +253,7 @@ public class AccountDAO {
 			}
 		} finally {
 			JDBCClose.close(conn, pstmt);
+			
 		}
 	}
 	
@@ -263,10 +262,16 @@ public class AccountDAO {
 		
 		try {
 			conn.setAutoCommit(false);
-			
-			
+			List<AccountVO> updateList = accountInfoNoUI(accountNo);
+			String tableName="";
+			for(AccountVO vo : updateList) {
+				tableName = vo.getBank();
+			}
+			//은행 별 계좌 테이블에 등록
+			//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 			sql = new StringBuilder();
-			sql.append("UPDATE ACCOUNT_? SET nickName = ? WHERE ACCOUNT_NO = ? AND user_ID = ? ");
+			sql.append("UPDATE ACCOUNT_"+ tableName 
+					+ "SET nickName = ? WHERE ACCOUNT_NO = ? AND user_ID = ? ");
 
 			pstmt = conn.prepareStatement(sql.toString());
 			
@@ -276,6 +281,18 @@ public class AccountDAO {
 			pstmt.setString(4, userVO.getId());
 			pstmt.executeUpdate();
 			
+			//은행 별 계좌 테이블에 등록
+			//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+			sql = new StringBuilder();
+			sql.append("UPDATE ACCOUNT_SYSTEM SET nickName = ? WHERE ACCOUNT_NO = ? AND user_ID = ? ");
+
+			pstmt = conn.prepareStatement(sql.toString());
+			
+			pstmt.setString(1, nickName);
+			pstmt.setString(2, nickName);
+			pstmt.setString(3, accountNo);
+			pstmt.setString(4, userVO.getId());
+			pstmt.executeUpdate();
 			
 			conn.commit();
 			System.out.println("해당 계좌의 별칭을 수정했습니다.");
@@ -294,21 +311,42 @@ public class AccountDAO {
 		
 	}
 	
-	public void accountDeleteUI(String accountNO) {
+	public void accountDeleteUI(String accountNo) {
 		conn = new ConnectionFactory().getConnection();
 
 		try {
 			conn.setAutoCommit(false);
 			sql = new StringBuilder();
+			
+			List<AccountVO> updateList = accountInfoNoUI(accountNo);
+			String tableName="";
+			for(AccountVO vo : updateList) {
+				tableName = vo.getBank();
+			}
+			//은행 별 계좌 테이블에 등록
+			//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+			sql = new StringBuilder();
+			sql.append("DELETE FROM ACCOUNT_"+ tableName 
+					+ " WHERE ACCOUNT_NO = ? ");
+
+			pstmt = conn.prepareStatement(sql.toString());
+			
+			pstmt.setString(1, accountNo);
+			pstmt.executeUpdate();
+			
+			//은행 별 계좌 테이블에 등록
+			//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+			sql = new StringBuilder();
 			sql.append("DELETE FROM ACCOUNT_SYSTEM WHERE ACCOUNT_NO = ? ");
 
 			pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setString(1, accountNO);
+			
+			pstmt.setString(1, accountNo);
 			pstmt.executeUpdate();
+			
 			conn.commit();
 			System.out.println("해당 계좌를 삭제했습니다.");
 
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
@@ -349,69 +387,7 @@ public class AccountDAO {
 			JDBCClose.close(conn, pstmt);
 		}
 	}
-	
-	
-	public void transferUI(String accountNoFrom, int money, String accountNoTo) {
-		conn = new ConnectionFactory().getConnection();
-		try {
-			sql = new StringBuilder();
-			sql.append("SELECT BALANCE FROM ACCOUNT_SYSTEM WHERE ACCOUNT_NO = ?");
-			pstmt = conn.prepareStatement(sql.toString());
-			pstmt.setString(1, accountNoFrom);
-			rs = pstmt.executeQuery();
-			
-			int balance = 0;
-			while (rs.next()) {
-				balance = rs.getInt("BALANCE");
-			}
-			
-			if(money > balance) {
-				System.out.println(">>>잔액이 부족합니다. ");
-			} else {
-				sql = new StringBuilder();
-				sql.append("SELECT * FROM ACCOUNT_SYSTEM WHERE ACCOUNT_NO = ? AND user_ID = ?");
-				pstmt = conn.prepareStatement(sql.toString());
-				pstmt.setString(1, accountNoTo);
-				pstmt.setString(2, userVO.getId());
-				rs = pstmt.executeQuery();
-				if(rs.next()) {
-					conn.setAutoCommit(false);
-					sql = new StringBuilder();
-					sql.append("UPDATE ACCOUNT_SYSTEM SET BALANCE = BALANCE - ? WHERE ACCOUNT_NO = ? AND user_ID = ?");
-					pstmt = conn.prepareStatement(sql.toString());
-					pstmt.setInt(1, money);
-					pstmt.setString(2, accountNoFrom);
-					pstmt.setString(3, userVO.getId());
-					pstmt.executeUpdate();
-					
-					sql = new StringBuilder();
-					sql.append("UPDATE ACCOUNT_SYSTEM SET BALANCE = BALANCE + ? WHERE ACCOUNT_NO = ? AND user_ID = ? ");
-					pstmt = conn.prepareStatement(sql.toString());
-					pstmt.setInt(1, money);
-					pstmt.setString(2, accountNoTo);
-					pstmt.setString(3, userVO.getId());
-					pstmt.executeUpdate();
-					conn.commit();
-					System.out.println("\'"+ accountNoTo +"\' 계좌로 " + money + "원 이체 완료했습니다.");
 
-				} else {
-					System.out.println(">>>이체받을 계좌번호가 정확하지 않습니다.");
-				}
-				
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-		} finally {
-			JDBCClose.close(conn, pstmt);
-		}
-	}
-	
 	public void withrawUI(String accountNo, int money) {
 		conn = new ConnectionFactory().getConnection();
 		try {
@@ -438,7 +414,7 @@ public class AccountDAO {
 					pstmt.executeUpdate();
 					conn.commit();
 					System.out.println(money + "원을 인출했습니다.");
-
+					
 				}
 			} else { // 해당 계좌가 없으면
 				System.out.println(">>>해당 계좌가 없습니다.");
@@ -454,7 +430,139 @@ public class AccountDAO {
 			JDBCClose.close(conn, pstmt);
 		}
 	}
+	
+	public void transferUI(String accountNoFrom, int money, String accountNoTo) {
+		conn = new ConnectionFactory().getConnection();
+		try {
+			List<AccountVO> updateList = accountInfoNoUI(accountNoFrom);
 			
+			//은행명 저장
+			String tableName_From="";
+			for(AccountVO vo : updateList) {
+				tableName_From = vo.getBank();
+			}
+			updateList = accountInfoNoUI(accountNoTo);
+			//은행명 저장
+			String tableName_To="";
+			for(AccountVO vo : updateList) {
+				tableName_To = vo.getBank();
+			}
+			conn = new ConnectionFactory().getConnection();
+			sql = new StringBuilder();
+			sql.append("SELECT BALANCE FROM ACCOUNT_SYSTEM WHERE ACCOUNT_NO = ?");
+			pstmt = conn.prepareStatement(sql.toString());
+			pstmt.setString(1, accountNoFrom);
+			rs = pstmt.executeQuery();
+			
+			int balance = 0;
+			while (rs.next()) {
+				balance = rs.getInt("BALANCE");
+			}
+			
+			if(money > balance) {
+				System.out.println(">>>잔액이 부족합니다. ");
+			} else {
+				pstmt.clearParameters();
+				sql = new StringBuilder();
+				sql.append("SELECT * FROM ACCOUNT_SYSTEM WHERE ACCOUNT_NO = ? AND user_ID = ?");
+				pstmt = conn.prepareStatement(sql.toString());
+				pstmt.setString(1, accountNoTo);
+				pstmt.setString(2, userVO.getId());
+				rs = pstmt.executeQuery();
+				
+				if(rs.next()) {
+					conn.setAutoCommit(false);
+					
+					// Account_SYSTEM 내의 두개 조정 
+					// ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+					pstmt.clearParameters();
+					sql = new StringBuilder();
+					sql.append("UPDATE ACCOUNT_SYSTEM SET BALANCE = BALANCE - ? WHERE ACCOUNT_NO = ? AND user_ID = ?");
+					pstmt = conn.prepareStatement(sql.toString());
+					pstmt.setInt(1, money);
+					pstmt.setString(2, accountNoFrom);
+					pstmt.setString(3, userVO.getId());
+					pstmt.executeUpdate();
+					
+					pstmt.clearParameters();
+					sql = new StringBuilder();
+					sql.append("UPDATE ACCOUNT_SYSTEM SET BALANCE = BALANCE + ? WHERE ACCOUNT_NO = ? AND user_ID = ?");
+					pstmt = conn.prepareStatement(sql.toString());
+					pstmt.setInt(1, money);
+					pstmt.setString(2, accountNoTo);
+					pstmt.setString(3, userVO.getId());
+					pstmt.executeUpdate();
+						
+							
+					// ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+					// 통합 계좌 은행 테이블 수정 구간
+					
+					if (tableName_From.equals("하나") && !tableName_To.equals("하나")) {
+						
+						pstmt.clearParameters();
+						sql = new StringBuilder();
+						sql.append("UPDATE ACCOUNT_" + tableName_To 
+								+ " SET BALANCE = BALANCE + ? WHERE ACCOUNT_NO = ? AND user_ID = ? ");
+						pstmt = conn.prepareStatement(sql.toString());
+						pstmt.setInt(1, money);
+						pstmt.setString(2, accountNoTo);
+						pstmt.setString(3, userVO.getId());
+						pstmt.executeUpdate();
+						
+					} else if(!tableName_From.equals("하나") && tableName_To.equals("하나")) {
+						pstmt.clearParameters();
+						sql = new StringBuilder();
+						sql.append("UPDATE ACCOUNT_" + tableName_From 
+								+ " SET BALANCE = BALANCE - ? WHERE ACCOUNT_NO = ? AND user_ID = ? ");
+						pstmt = conn.prepareStatement(sql.toString());
+						pstmt.setInt(1, money);
+						pstmt.setString(2, accountNoFrom);
+						pstmt.setString(3, userVO.getId());
+						pstmt.executeUpdate();
+						
+					}else if(!tableName_From.equals("하나") && !tableName_To.equals("하나")) {
+						pstmt.clearParameters();
+						sql = new StringBuilder();
+						sql.append("UPDATE ACCOUNT_" + tableName_From 
+								+ " SET BALANCE = BALANCE - ? WHERE ACCOUNT_NO = ? AND user_ID = ? ");
+						pstmt = conn.prepareStatement(sql.toString());
+						pstmt.setInt(1, money);
+						pstmt.setString(2, accountNoFrom);
+						pstmt.setString(3, userVO.getId());
+						pstmt.executeUpdate();
+						
+						pstmt.clearParameters();
+						sql = new StringBuilder();
+						sql.append("UPDATE ACCOUNT_" + tableName_To 
+								+ " SET BALANCE = BALANCE + ? WHERE ACCOUNT_NO = ? AND user_ID = ? ");
+						pstmt = conn.prepareStatement(sql.toString());
+						pstmt.setInt(1, money);
+						pstmt.setString(2, accountNoTo);
+						pstmt.setString(3, userVO.getId());
+						pstmt.executeUpdate();
+					}
+					
+					conn.commit();
+					System.out.println("\'"+ accountNoTo +"\' 계좌로 " + money + "원 이체 완료했습니다.");
+					} else {
+					System.out.println(">>>이체받을 계좌번호가 정확하지 않습니다.");
+				}
+				
+			}
+	
+		} catch (Exception e) {
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} finally {
+			JDBCClose.close(conn, pstmt);
+			JDBCClose.close(rs);
+		}
+	}
+	
 				
 	public void createAccountUI(String accountNo, String bank, String accountHolder, int firstMoney, String nickName) {
 		
@@ -498,6 +606,7 @@ public class AccountDAO {
 			}
 		} finally {
 			JDBCClose.close(conn, pstmt);
+			JDBCClose.close(rs);
 		}
 	}
 }

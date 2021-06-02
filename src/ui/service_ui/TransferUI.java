@@ -1,4 +1,6 @@
-package ui;
+package ui.service_ui;
+
+import ui.BaseUI;
 
 public class TransferUI extends BaseUI{
 

@@ -1,5 +1,14 @@
 package ui;
 
+import ui.service_ui.AccountInfoAllUI;
+import ui.service_ui.AccountInfoBankUI;
+import ui.service_ui.AccountInfoNoUI;
+import ui.service_ui.CreateAccountUI;
+import ui.service_ui.DepositUI;
+import ui.service_ui.TransferUI;
+import ui.service_ui.WithrawUI;
+import ui.totalAccount_ui.TotalAccountUI;
+
 public class MainUI extends BaseUI {
 
 	@Override
@@ -65,6 +74,7 @@ public class MainUI extends BaseUI {
 		System.out.println("==============================");
 		System.out.println("\t1. 로그인");
 		System.out.println("\t2. 회원가입");
+		System.out.println("\t0. 관리자 로그인");
 		System.out.println("==============================");
 	}
 	
@@ -93,6 +103,9 @@ public class MainUI extends BaseUI {
 			BaseUI.user = ((LoginUI) myui).user();
 		} else if(logJoin == 2) {
 			myui = new JoinUI();
+			myui.execute();
+		} else if(logJoin == 3){
+			myui = new AdminUI();
 			myui.execute();
 		} else
 			System.out.println("잘못 입력하셨습니다.");

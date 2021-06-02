@@ -1,4 +1,6 @@
-package ui;
+package ui.totalAccount_ui;
+
+import ui.BaseUI;
 
 public class AccountDeleteUI extends BaseUI{
 
