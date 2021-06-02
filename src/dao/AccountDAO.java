@@ -120,7 +120,7 @@ public class AccountDAO {
 			rs = pstmt.executeQuery();
 			
 			while (rs.next()) {
-				System.out.println(rs.getString(1));
+//				System.out.println(rs.getString(1));
 				String bank = rs.getString("BANK");
 				String accountNo = rs.getString("ACCOUNT_NO");
 				String accountHolder = rs.getString("ACCOUNT_HOLDER");

@@ -10,20 +10,19 @@ public class MainUI extends BaseUI {
 	}
 	
 	public void showSecondMenu() {
+		System.out.println();
 		System.out.println("==============================");
 		System.out.println("1. 계좌 전체 조회"); // AccountInfoAllUI
 		System.out.println("2. 계좌번호로 조회"); // AccountInfoNoUI
 		System.out.println("3. 은행별 계좌 조회"); // AccountInfoBankUI
-		System.out.println("4. 계좌 등록"); // AccountAddUI
-		System.out.println("5. 계좌 수정"); // AccountUpdateUI
-		System.out.println("6. 계좌 삭제"); // AccountDeleteUI
-		System.out.println("7. 입금"); // DepositUI
-		System.out.println("8. 출금"); // WithrawUI
-		System.out.println("9. 이체"); // TransferUI
-		System.out.println("10. 계좌 신규 생성"); // CreateAccountUI
+		System.out.println("4. 통합계좌 관리"); // AccountAddUI
+		System.out.println("5. 입금"); // AccountUpdateUI
+		System.out.println("6. 출금"); // AccountDeleteUI
+		System.out.println("7. 이체"); // DepositUI
+		System.out.println("8. 계좌 신규 생성"); // WithrawUI
 		System.out.println("0. 종료"); // ExitUI
 		System.out.println("==============================");
-		
+		System.out.println();
 		System.out.print("원하시는 서비스 번호를 입력하세요 : ");
 	}
 	
@@ -61,7 +60,6 @@ public class MainUI extends BaseUI {
 				myui = new AccountInfoAllUI();
 				myui.execute();
 				break;
-			
 			case 2:
 				myui = new AccountInfoNoUI();
 				myui.execute();
@@ -71,30 +69,22 @@ public class MainUI extends BaseUI {
 				myui.execute();
 				break;
 			case 4:
-				myui = new AccountAddUI();
+				myui = new TotalAccountUI();
 				myui.execute();
 				break;
 			case 5:
-				myui = new AccountUpdateUI();
-				myui.execute();
-				break;
-			case 6:
-				myui = new AccountDeleteUI();
-				myui.execute();
-				break;
-			case 7:
 				myui = new DepositUI();
 				myui.execute();
 				break;
-			case 8:
+			case 6:
 				myui = new WithrawUI();
 				myui.execute();
 				break;
-			case 9:
+			case 7:
 				myui = new TransferUI();
 				myui.execute();
-				break;	
-			case 10:
+				break;
+			case 8:
 				myui = new CreateAccountUI();
 				myui.execute();
 				break;
