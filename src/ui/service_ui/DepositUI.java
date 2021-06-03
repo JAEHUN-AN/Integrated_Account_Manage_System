@@ -15,7 +15,6 @@ public class DepositUI extends BaseUI {
 			System.out.println("0원 초과 금액만 입금 가능합니다.");
 			money = scanInt("입금하실 금액을 입력해주세요(숫자만 입력) : ");
 		}
-		
 		service.depositUI(accountNo, money);
 		
 	}

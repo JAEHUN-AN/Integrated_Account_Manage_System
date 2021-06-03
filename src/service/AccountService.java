@@ -10,6 +10,8 @@ public class AccountService {
 	
 	public static UserVO user;
 	private AccountDAO accountDAO;
+	
+	
 	public AccountService() {
 		accountDAO = new AccountDAO();
 	}
@@ -63,6 +65,21 @@ public class AccountService {
 	public void createAccountUI(String accountNo, String bank, String accountHolder, int firstMoney, String alias) {
 		accountDAO.createAccountUI(accountNo, bank, accountHolder, firstMoney, alias);
 	}
+
+	public void showAllUser() {
+		accountDAO.showAllUser();
+	}
+
+	public void showAllAccount() {
+		accountDAO.showAllAccount();
+	}
+
+	public boolean adminLogin(String id, String password) {
+		// TODO Auto-generated method stub
+		boolean isLogin = accountDAO.adminLogin(id, password);
+		return isLogin;
+	}
+
 }
 
 

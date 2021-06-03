@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import service.AccountService;
-import ui.BaseUI;
 import util.ConnectionFactory;
 import util.JDBCClose;
 import vo.AccountVO;
@@ -50,6 +48,11 @@ public class AccountDAO {
 				userVO.setId(userId);
 				userVO.setPw(password);
 				userVO.setName(name);
+				
+				UserVO user = new UserVO();
+				user.setId(userId);
+				user.setPw(password);
+				user.setName(name);
 				//계좌 여부 체크
 				List<AccountVO> list = accountInfoAll(); 
 				if(list.isEmpty()) {
@@ -60,7 +63,9 @@ public class AccountDAO {
 					System.out.println("==============================");
 					System.out.println();
 				}
-				return userVO;
+				
+				userVO.setName(null);
+				return user;
 			}
 			
 		} catch (Exception e) {
@@ -608,5 +613,99 @@ public class AccountDAO {
 			JDBCClose.close(conn, pstmt);
 			JDBCClose.close(rs);
 		}
+	}
+
+	public void showAllUser() {
+		conn = new ConnectionFactory().getConnection();
+		
+		try {
+			sql = new StringBuilder();
+			sql.append("SELECT * FROM User_table ");
+			pstmt = conn.prepareStatement(sql.toString());
+			rs = pstmt.executeQuery();
+			
+			System.out.println("================유저 목록=================");
+			while(rs.next()) {
+				String id = rs.getString("id");
+				String name = rs.getString("name");
+				
+				System.out.print("\t id : " + id);
+				System.out.println("\t이름 : " + name);
+			}
+			System.out.println("========================================");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			JDBCClose.close(conn, pstmt);
+			JDBCClose.close(rs);
+		}
+	}
+
+
+	public void showAllAccount() {
+		conn = new ConnectionFactory().getConnection();
+		
+		try {
+			sql = new StringBuilder();
+			sql.append("SELECT * FROM ACCOUNT_SYSTEM ");
+			pstmt = conn.prepareStatement(sql.toString());
+			rs = pstmt.executeQuery();
+			
+			System.out.println("==================================계좌 목록===================================");
+			while(rs.next()) {
+				String rs1 = rs.getString(1);
+				String rs2 = rs.getString(2);
+				String rs3 = rs.getString(3);
+				String rs4 = rs.getString(4);
+				String rs5 = rs.getString(5);
+				String rs6 = rs.getString(6);
+				String rs7 = rs.getString(7);
+				
+				System.out.print("\t ACCOUNT_NO : " + rs1);
+				System.out.print("\t BANK : " + rs2);
+				System.out.print("\t ACCOUNT_HOLDER : " + rs3);
+				System.out.print("\t BALANCE : " + rs4);
+				System.out.print("\t NICKNAME : " + rs5);
+				System.out.print("\t USER_ID : " + rs6);
+				System.out.print("\t CREATE_DATE : " + rs7);
+				System.out.println();
+			}
+			System.out.println("============================================================================");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			JDBCClose.close(conn, pstmt);
+			JDBCClose.close(rs);
+		}
+	}
+
+	public boolean adminLogin(String id, String pw) {
+		conn = new ConnectionFactory().getConnection();
+		try {
+			sql = new StringBuilder();
+			sql.append("SELECT ID, PW, NAME FROM ADMIN_TABLE WHERE ID = ? AND PW = ? ");
+			pstmt = conn.prepareStatement(sql.toString());
+			pstmt.setString(1, id);
+			pstmt.setString(2, pw);
+			rs = pstmt.executeQuery();
+			if(!rs.next()) {
+				System.out.println("==============해당 ID 정보가 없습니다.===============");
+				System.out.println();
+				System.out.println("=================다시 입력해주세요.=================");
+				return false;
+			} else {
+				String name = rs.getString(3);
+				System.out.println("==============================");
+				System.out.println("관리자 [" + name + "]님! 반갑습니다.");
+				System.out.println("==============================");
+				return true;
+			}
+		} catch (Exception e) {
+			System.out.println("====관리자 로그인이 실패하였습니다. 다시해주세요.====");
+		} finally {
+			JDBCClose.close(conn, pstmt);
+			JDBCClose.close(rs);
+		}
+		return false;
 	}
 }

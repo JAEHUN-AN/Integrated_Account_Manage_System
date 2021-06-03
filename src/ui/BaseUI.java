@@ -9,7 +9,7 @@ import vo.UserVO;
 public abstract class BaseUI implements MyAccountUI {
 	private Scanner sc;
 	protected AccountService service;
-	protected static UserVO user;
+	protected static UserVO user = null;
 	
 	public BaseUI() {
 		sc = new Scanner(System.in);
@@ -23,8 +23,16 @@ public abstract class BaseUI implements MyAccountUI {
 	}
 	
 	protected int scanInt(String msg) {
-			int num = Integer.parseInt(scanStr(msg));
-			return num;
+		int num = -1;
+		try {
+			num = Integer.parseInt(scanStr(msg));
+		}
+		catch(Exception e){
+				System.out.println("숫자가 아닙니다.");
+				System.out.println("다시 입력해주세요.");
+				System.out.println();
+		}
+		return num;
 			
 	}
 	

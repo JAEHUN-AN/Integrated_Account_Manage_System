@@ -4,7 +4,7 @@ import vo.UserVO;
 
 public class LoginUI extends BaseUI {
 	
-	private  UserVO user; 
+	public static UserVO user = null; 
 	
 	@Override
 	public void execute() throws Exception {
@@ -13,8 +13,10 @@ public class LoginUI extends BaseUI {
 		
 		user = service.login(id, password);
 	}
-	public  UserVO user() {
-		return user; 
+	public static UserVO user() {
+		if(user.getName() == null)
+			user = null;
+		return user;
 	}
 	
 }
