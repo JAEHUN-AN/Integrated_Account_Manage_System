@@ -71,27 +71,27 @@ public class MainUI extends BaseUI {
 		}
 	}
 	public void showFirstMenu() {
-		System.out.println("==========================================");
+		System.out.println("========================================================");
 		System.out.println("\t1. 로그인");
 		System.out.println("\t2. 회원가입");
 		System.out.println("\t3. 관리자 로그인");
 		System.out.println("\t0. 종료");
-		System.out.println("==========================================");
+		System.out.println("========================================================");
 	}
 	
 	public void showSecondMenu() {
 		System.out.println();
-		System.out.println("==========================================");
-		System.out.println("1. 계좌 전체 조회"); // AccountInfoAllUI
-		System.out.println("2. 계좌번호로 조회"); // AccountInfoNoUI
-		System.out.println("3. 은행별 계좌 조회"); // AccountInfoBankUI
-		System.out.println("4. 통합계좌 관리"); // AccountAddUI
-		System.out.println("5. 입금"); // AccountUpdateUI
-		System.out.println("6. 출금"); // AccountDeleteUI
-		System.out.println("7. 이체"); // DepositUI
-		System.out.println("8. 계좌 신규 생성"); // WithrawUI
-		System.out.println("0. 종료"); // ExitUI
-		System.out.println("==========================================");
+		System.out.println("========================================================");
+		System.out.println("\\t1. 계좌 전체 조회"); // AccountInfoAllUI
+		System.out.println("\\t2. 계좌번호로 조회"); // AccountInfoNoUI
+		System.out.println("\\t3. 은행별 계좌 조회"); // AccountInfoBankUI
+		System.out.println("\\t4. 통합계좌 관리"); // AccountAddUI
+		System.out.println("\\t5. 입금"); // AccountUpdateUI
+		System.out.println("\\t6. 출금"); // AccountDeleteUI
+		System.out.println("\\t7. 이체"); // DepositUI
+		System.out.println("\\t8. 계좌 신규 생성"); // WithrawUI
+		System.out.println("\\t0. 종료"); // ExitUI
+		System.out.println("========================================================");
 		System.out.println();
 		System.out.print("원하시는 서비스 번호를 입력하세요 : ");
 	}

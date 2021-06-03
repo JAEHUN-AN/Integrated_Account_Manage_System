@@ -6,11 +6,11 @@ public class AdminUI extends BaseUI {
 		System.out.println();
 		System.out.println("관리자 서비스입니다.");
 		System.out.println();
-		System.out.println("==========================================");
-		System.out.println("1. 유저 조회"); 
-		System.out.println("2. SQL UI");
-		System.out.println("0. 뒤로 가기"); 
-		System.out.println("==========================================");
+		System.out.println("==========================================================");
+		System.out.println("\t1. 유저 조회"); 
+		System.out.println("\t2. SQL UI");
+		System.out.println("\t0. 뒤로 가기"); 
+		System.out.println("==========================================================");
 		System.out.println();
 		System.out.print("원하시는 서비스 번호를 입력하세요 : ");
 	}
@@ -27,7 +27,7 @@ public class AdminUI extends BaseUI {
 				break;
 			}// 로그인 실패시 탈출 여부 질문
 			System.out.println();
-			System.out.println("======나가시려면 0번, 다시 시도하려면 아무 키나 입력해주세요.======");
+			System.out.println("=========나가시려면 0번, 다시 시도하려면 아무 키나 입력해주세요.=========");
 			System.out.println();
 			if(scanInt("") == 0) {
 				return;

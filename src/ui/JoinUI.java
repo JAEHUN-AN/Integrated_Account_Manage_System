@@ -24,7 +24,7 @@ public class JoinUI extends BaseUI{
 				System.out.println("비밀번호가 일치하지 않습니다. 다시 설정해주세요.");
 			}
 		}
-		String name = scanStr("이름을 입력해w주세요 : ");
+		String name = scanStr("이름을 입력해주세요 : ");
 		service.join(id, password, name);
 		
 	}
