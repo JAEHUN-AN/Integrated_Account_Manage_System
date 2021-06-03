@@ -266,7 +266,6 @@ public class AccountDAO {
 		conn = new ConnectionFactory().getConnection();
 		
 		try {
-			conn.setAutoCommit(false);
 			List<AccountVO> updateList = accountInfoNoUI(accountNo);
 			String tableName="";
 			for(AccountVO vo : updateList) {
@@ -274,16 +273,17 @@ public class AccountDAO {
 			}
 			//은행 별 계좌 테이블에 등록
 			//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+			conn = new ConnectionFactory().getConnection();
+			conn.setAutoCommit(false);
 			sql = new StringBuilder();
 			sql.append("UPDATE ACCOUNT_"+ tableName 
-					+ "SET nickName = ? WHERE ACCOUNT_NO = ? AND user_ID = ? ");
+					+ " SET nickName = ? WHERE ACCOUNT_NO = ? AND user_ID = ? ");
 
 			pstmt = conn.prepareStatement(sql.toString());
 			
 			pstmt.setString(1, nickName);
-			pstmt.setString(2, nickName);
-			pstmt.setString(3, accountNo);
-			pstmt.setString(4, userVO.getId());
+			pstmt.setString(2, accountNo);
+			pstmt.setString(3, userVO.getId());
 			pstmt.executeUpdate();
 			
 			//은행 별 계좌 테이블에 등록
@@ -294,9 +294,8 @@ public class AccountDAO {
 			pstmt = conn.prepareStatement(sql.toString());
 			
 			pstmt.setString(1, nickName);
-			pstmt.setString(2, nickName);
-			pstmt.setString(3, accountNo);
-			pstmt.setString(4, userVO.getId());
+			pstmt.setString(2, accountNo);
+			pstmt.setString(3, userVO.getId());
 			pstmt.executeUpdate();
 			
 			conn.commit();
@@ -320,7 +319,6 @@ public class AccountDAO {
 		conn = new ConnectionFactory().getConnection();
 
 		try {
-			conn.setAutoCommit(false);
 			sql = new StringBuilder();
 			
 			List<AccountVO> updateList = accountInfoNoUI(accountNo);
@@ -330,6 +328,8 @@ public class AccountDAO {
 			}
 			//은행 별 계좌 테이블에 등록
 			//ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+			conn = new ConnectionFactory().getConnection();
+			conn.setAutoCommit(false);
 			sql = new StringBuilder();
 			sql.append("DELETE FROM ACCOUNT_"+ tableName 
 					+ " WHERE ACCOUNT_NO = ? ");
@@ -465,7 +465,7 @@ public class AccountDAO {
 			}
 			
 			if(money > balance) {
-				System.out.println(">>>잔액이 부족합니다. ");
+				System.out.println("=================잔액이 부족합니다. ===================");
 			} else {
 				pstmt.clearParameters();
 				sql = new StringBuilder();
@@ -550,7 +550,7 @@ public class AccountDAO {
 					conn.commit();
 					System.out.println("\'"+ accountNoTo +"\' 계좌로 " + money + "원 이체 완료했습니다.");
 					} else {
-					System.out.println(">>>이체받을 계좌번호가 정확하지 않습니다.");
+					System.out.println("====================이체받을 계좌번호가 정확하지 않습니다.=======================");
 				}
 				
 			}
@@ -581,7 +581,7 @@ public class AccountDAO {
 			pstmt.setString(1, userVO.getId());
 			rs = pstmt.executeQuery();
 			
-			if(rs.next()) { // 결과가 없으면 새 계좌 생성
+			if(!rs.next()) { // 결과가 없으면 새 계좌 생성
 				conn.setAutoCommit(false);
 				sql = new StringBuilder();
 				sql.append("INSERT INTO ACCOUNT_SYSTEM(ACCOUNT_NO, BANK, ACCOUNT_HOLDER, BALANCE, nickName, user_ID) VALUES(?, ?, ?, ?, ?, ?) ");
@@ -594,13 +594,13 @@ public class AccountDAO {
 				pstmt.setString(6, userVO.getId());
 				pstmt.executeUpdate();
 				conn.commit();
-					
+				System.out.println("새로운 계좌를 생성했습니다.");
 			}else {// 결과가 있으면 한 달 제한 안내
 				System.out.println();
 				System.out.println("한 달 뒤에 생성 가능합니다.");
 				System.out.println();
 			}
-			System.out.println("새로운 계좌를 생성했습니다.");
+	
 
 		} catch (Exception e) {
 			e.printStackTrace();

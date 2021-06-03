@@ -42,8 +42,8 @@ public class AccountService {
 		accountDAO.accountAddUI(account, userId);
 	}
 	
-	public void accountUpdateUI(String accountNo, String alias) {
-		accountDAO.accountUpdateUI(accountNo, alias);
+	public void accountUpdateUI(String accountNo, String nickName) {
+		accountDAO.accountUpdateUI(accountNo, nickName);
 	}
 
 	public void accountDeleteUI(String accountNo) {
